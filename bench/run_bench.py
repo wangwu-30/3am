@@ -95,7 +95,24 @@ def test_aliyun_arms_real():
     
     # Verify last known good inference
     lkg = summary['last_known_good']
+    lkg_method = summary.get('last_known_good_method')
+    
+    # Expected: 2026-10-08 03:31 UTC+8 = 2026-10-07 19:31 UTC
+    # P2 (26h): 2026-10-09 05:31:13 UTC+8 - 26h = 2026-10-08 03:31:13 UTC+8
+    # P1 (48h): 2026-10-10 03:31:58 UTC+8 - 48h = 2026-10-08 03:31:58 UTC+8
+    expected_lkg_start = "2026-10-07T19:31"
+    assert lkg.startswith(expected_lkg_start), f"Expected last_known_good to start with {expected_lkg_start}, got {lkg}"
     print(f"✅ Last known good: {lkg}")
+    
+    # Verify cross-check method
+    assert lkg_method == "threshold_cross_check_2_rules_agree", f"Expected cross-check method, got {lkg_method}"
+    print(f"✅ Inference method: {lkg_method} (two rules independently confirm)")
+    
+    # Show evidence
+    if 'last_known_good_evidence' in summary:
+        print(f"✅ Evidence:")
+        for evidence in summary['last_known_good_evidence']:
+            print(f"   - {evidence}")
     
     return {
         'compression_ratio': compression_ratio,

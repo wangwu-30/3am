@@ -29,7 +29,7 @@ You wake up to 288 alert emails. Same rule, repeated every 10 minutes. P2 escala
 ### Alert Summary
 - Total alerts: 288
 - Unique rules: 2
-- Last known good: 2026-10-08 03:30 UTC+8 (26h before first alert)
+- Last known good: 2026-10-08 03:31 UTC+8 (inferred from two independent rules)
 
 ### Escalation Timeline
 | Time (UTC+8)        | Event                              | Priority |
@@ -102,7 +102,7 @@ The agent will output:
 - Total alerts: 288
 - Unique rules: 2
 - Time range: 2026-10-08 21:31:22Z to 2026-10-10 08:24:09Z
-- Last known good: 2026-10-08 03:30 UTC+8 (inferred, 26h before first alert)
+- Last known good: 2026-10-08 03:31 UTC+8 (inferred from threshold cross-check: P2 26h rule + P1 48h rule independently confirm)
 
 ### Escalation Timeline
 | Time (UTC+8)        | Event                                          | Priority |
@@ -202,9 +202,9 @@ curl -s https://probe-endpoint/status | jq .
 ### Token Efficiency
 
 Real-world example (from `bench/`):
-- **Input**: 288 Aliyun ARMS emails, ~60,000 tokens
-- **Output**: 1 normalized timeline, ~3,500 tokens
-- **Compression**: 94.2% fewer tokens
+- **Input**: 288 Aliyun ARMS emails, ~30,762 tokens
+- **Output**: 1 normalized timeline, ~320 tokens
+- **Compression**: 99.0% fewer tokens
 
 This lets you hand large alert dumps to AI assistants without hitting context limits.
 
@@ -236,22 +236,26 @@ Expected output:
 
 📊 Test: Real Aliyun ARMS Certificate Alerts
 ============================================================
-Input:  288 alerts, ~60,000 tokens
-Output: 2 unique rules, ~3,500 tokens
-Compression: 94.2% fewer tokens
+Input:  288 alerts, ~30,762 tokens
+Output: 2 unique rules, ~320 tokens
+Compression: 99.0% fewer tokens
 ✅ Total alerts: 288
 ✅ Unique rules: 2
 ✅ Escalation detected: P2 → P1
-✅ First P2 alert: 2026-10-09T05:31:13Z
-✅ First P1 alert: 2026-10-10T03:31:58Z
-✅ Last known good: 2026-10-09T05:31:13Z
+✅ First P2 alert: 2026-10-08T21:31:13+00:00
+✅ First P1 alert: 2026-10-09T19:31:58+00:00
+✅ Last known good: 2026-10-07T19:31:13+00:00
+✅ Inference method: threshold_cross_check_2_rules_agree (two rules independently confirm)
+✅ Evidence:
+   - Rule '生产证书自动化超过26小时未成功收敛' (threshold: 26h) first fired at 2026-10-08 21:31:13 UTC → last good ≈ 2026-10-07 19:31:13 UTC
+   - Rule '生产证书自动化超过48小时未成功收敛' (threshold: 48h) first fired at 2026-10-09 19:31:58 UTC → last good ≈ 2026-10-07 19:31:58 UTC
 
 ============================================================
 ✅ All tests passed!
 ============================================================
 
-🎯 Key Result: 94.2% token reduction
-   (288 alerts → 1 page: 60,000 → 3,500 tokens)
+🎯 Key Result: 99.0% token reduction
+   (288 alerts → 1 page: 30,762 → 320 tokens)
 ```
 
 ---

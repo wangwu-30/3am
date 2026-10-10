@@ -74,7 +74,7 @@ $ python3 skills/3am/normalize.py bench/fixtures/real/aliyun-arms-cert-alerts.js
 - **Total alerts**: 288
 - **Unique rules**: 2
 - **Time range**: 2026-10-08 21:31:22Z to 2026-10-10 08:24:09Z (~35 hours)
-- **Last known good**: 2026-10-08 03:30 UTC+8 (inferred: 26 hours before first P2 alert)
+- **Last known good**: 2026-10-08 03:31 UTC+8 (cross-check: P2 26h rule + P1 48h rule independently confirm)
 
 ### Escalation Timeline
 
@@ -106,7 +106,7 @@ $ python3 skills/3am/normalize.py bench/fixtures/real/aliyun-arms-cert-alerts.js
 #### 1. Certificate reconciler has stopped converging (HIGH confidence)
 **Evidence**:
 - Alert content explicitly states "26小时没有完成一次完整收敛" (26 hours without completing one full convergence)
-- Last successful convergence: ~2026-10-08 03:30 UTC+8 (inferred from 26h lookback)
+- Last successful convergence: 2026-10-08 03:31 UTC+8 (cross-checked: P2 26h rule first fired 2026-10-09 05:31 - 26h; P1 48h rule first fired 2026-10-10 03:31 - 48h; both independently confirm same time)
 - P2→P1 escalation after 48 hours indicates persistent failure, not transient network issue
 - No recovery alerts in the dataset
 
@@ -226,8 +226,8 @@ kubectl describe pod -n cert-namespace <pod-name> | grep -A 10 "Conditions:"
 ```bash
 $ python3 bench/run_bench.py
 
-🎯 Key Result: 99.3% token reduction
-   (288 alerts → 1 page: 30,762 → 207 tokens)
+🎯 Key Result: 99.0% token reduction
+   (288 alerts → 1 page: 30,762 → 320 tokens)
 ```
 
 The skill compressed 288 repetitive alerts into a 2-rule timeline, making it feasible for an AI agent to reason about the incident within its context window.
