@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Testing
+.pytest_cache/
+*.log
+
+# Outputs
+/tmp/
+*.json
+!bench/fixtures/**/*.json
+!bench/fixtures/**/*.jsonl
+!package.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Demo artifacts
+demo/*.gif
+demo/*.mp4

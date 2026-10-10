@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, cursor/* ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Verify normalize.py syntax
+      run: python3 -m py_compile skills/3am/normalize.py
+    
+    - name: Test normalize.py on real Aliyun ARMS dataset
+      run: |
+        python3 skills/3am/normalize.py bench/fixtures/real/aliyun-arms-cert-alerts.jsonl > /tmp/normalized-real.json
+        echo "✅ Real dataset normalized successfully"
+        cat /tmp/normalized-real.json | python3 -m json.tool > /dev/null
+        echo "✅ Output is valid JSON"
+    
+    - name: Test normalize.py on Alertmanager fixtures
+      run: |
+        python3 skills/3am/normalize.py bench/fixtures/synthetic/alertmanager-high-cpu.jsonl > /tmp/normalized-am.json
+        echo "✅ Alertmanager fixtures normalized"
+        cat /tmp/normalized-am.json | python3 -m json.tool > /dev/null
+    
+    - name: Test normalize.py on Grafana fixtures
+      run: |
+        python3 skills/3am/normalize.py bench/fixtures/synthetic/grafana-disk-space.jsonl > /tmp/normalized-grafana.json
+        echo "✅ Grafana fixtures normalized"
+        cat /tmp/normalized-grafana.json | python3 -m json.tool > /dev/null
+    
+    - name: Run benchmark suite
+      run: |
+        python3 bench/run_bench.py
+    
+    - name: Verify SKILL.md exists and is non-empty
+      run: |
+        test -f skills/3am/SKILL.md
+        test -s skills/3am/SKILL.md
+        echo "✅ SKILL.md is present and non-empty"
+    
+    - name: Check for Python syntax errors in bench
+      run: python3 -m py_compile bench/run_bench.py
