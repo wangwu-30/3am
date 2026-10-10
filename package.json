@@ -1,0 +1,47 @@
+{
+  "name": "@wangwu-30/3am",
+  "version": "0.1.0",
+  "description": "Let your coding agent take the 3 AM page - AI skill for production alert analysis",
+  "keywords": [
+    "ai",
+    "agent",
+    "skill",
+    "alerts",
+    "monitoring",
+    "incident-response",
+    "sre",
+    "devops",
+    "alertmanager",
+    "grafana",
+    "aliyun",
+    "prometheus"
+  ],
+  "homepage": "https://github.com/wangwu-30/3am#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wangwu-30/3am.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wangwu-30/3am/issues"
+  },
+  "author": "wangwu-30",
+  "license": "MIT",
+  "files": [
+    "skills/",
+    "bench/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "python3 bench/run_bench.py"
+  },
+  "skillsManifest": {
+    "skills": [
+      {
+        "name": "3am",
+        "description": "Take the 3 AM page - normalize and analyze production alerts",
+        "path": "skills/3am/SKILL.md"
+      }
+    ]
+  }
+}
