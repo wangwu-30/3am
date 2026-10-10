@@ -23,35 +23,44 @@ You wake up to 288 alert emails. Same rule, repeated every 10 minutes. P2 escala
 ```
 
 **After 3am:**
-```markdown
-## Incident Brief
-
-### Alert Summary
-- Total alerts: 288
-- Unique rules: 2
-- Last known good: 2026-10-08 03:31 UTC+8 (inferred from two independent rules)
-
-### Escalation Timeline
-| Time (UTC+8)        | Event                              | Priority |
-|---------------------|-----------------------------------|----------|
-| 2026-10-09 05:31:13 | Cert reconciler >26h first fired  | P2       |
-| 2026-10-09 05:41:00 | Repeating every ~10min            | P2       |
-| 2026-10-10 03:31:58 | Escalated to >48h                 | P1       |
-
-### Root-Cause Hypotheses
-1. **Certificate reconciler stuck** (HIGH confidence)
-   - Evidence: Alert "26小时没有完成一次完整收敛"
-   - Evidence: P2→P1 after 48h suggests persistent failure
-   
-### READ-ONLY Diagnostic Commands
-```bash
-kubectl get certificates -n cert-namespace -o yaml
-kubectl logs -n cert-namespace deployment/cert-reconciler --tail=200
 ```
+======================================================================
+  3am Incident Brief
+======================================================================
+
+Alert Storm Normalized:
+  288 alerts → 2 unique rules (99% reduction)
+
+Alert Rules:
+  Rule                                          Count    Priority   First Fired (UTC+8)
+  --------------------------------------------- -------- ---------- --------------------
+  生产证书自动化超过26小时未成功收敛                            210      P2         2026-10-09 05:31:13
+                                               (cert automation not converged >26h)
+  生产证书自动化超过48小时未成功收敛                            78       P1         2026-10-10 03:31:58
+                                               (cert automation not converged >48h)
+
+✓ Last Known Good:
+  2026-10-08 03:31:13 +08:00
+
+Cross-Check Evidence:
+  • Rule '生产证书自动化超过26小时未成功收敛' (threshold: 26h) first fired at 2026-10-08 21:31:13 UTC
+  • Rule '生产证书自动化超过48小时未成功收敛' (threshold: 48h) first fired at 2026-10-09 19:31:58 UTC
+  → Two rules independently confirm (agree within 45s)
+
+Escalation Timeline:
+  2026-10-09 05:31:13  P2  First alert
+  2026-10-10 03:31:58  P1  Escalated (+22.0h)
+
+Next: Read-Only Diagnostics
+  Gather context before taking action:
+  kubectl get pods -n cert-namespace
+  kubectl logs deployment/cert-reconciler --tail=200
+  kubectl get certificates -o yaml
 ```
 
-<!-- GIF placeholder: Terminal recording showing 288 alerts -> 1-page brief in 5 seconds -->
-_Demo GIF coming soon. See `demo/record.tape` to generate it with VHS._
+![3am Demo: From 288 alerts to 1-page brief](demo/3am-demo.gif)
+
+_✅ Last known good ≈ 2026-10-08 03:31 +08:00 — Two rules agree within 45s!_
 
 ---
 
@@ -268,7 +277,7 @@ Compression: 99.0% fewer tokens
 - [x] Deduplication and timeline generation
 - [x] Real production dataset (redacted)
 - [x] Benchmark suite
-- [ ] VHS demo recording
+- [x] VHS demo recording
 - [ ] Tencent Cloud CLS support
 - [ ] PagerDuty webhook support
 - [ ] Datadog webhook support

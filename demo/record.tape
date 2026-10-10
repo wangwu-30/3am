@@ -3,30 +3,24 @@
 
 Output demo/3am-demo.gif
 
-Set FontSize 14
+Set FontSize 15
 Set Width 1200
-Set Height 800
-Set Theme "Catppuccin Mocha"
+Set Height 700
+Set Theme "Dracula"
+Set TypingSpeed 30ms
 
-Type "# 3am Demo: From 288 alerts to 1 page" Sleep 1s Enter Sleep 1s
+# 0-3s: Show the alert wall (pain!)
+Type "# 3am: 288 alerts at 3 AM 😵" Sleep 500ms Enter
+Sleep 800ms
+Type "head -n 30 bench/fixtures/real/aliyun-arms-cert-alerts.jsonl | jq -c .subject" Enter
+Sleep 2500ms
 
-Type "# Step 1: Check the raw alerts" Sleep 500ms Enter
-Type "wc -l bench/fixtures/real/aliyun-arms-cert-alerts.jsonl" Sleep 500ms Enter
-Sleep 2s
+# 3-6s: Run the magic command
+Type "clear" Enter
+Sleep 300ms
+Type "# Turn the chaos into clarity:" Sleep 300ms Enter
+Sleep 500ms
+Type "python3 skills/3am/normalize.py bench/fixtures/real/aliyun-arms-cert-alerts.jsonl | python3 skills/3am/brief.py -" Enter
 
-Type "head -n 3 bench/fixtures/real/aliyun-arms-cert-alerts.jsonl | jq ." Sleep 500ms Enter
-Sleep 4s
-
-Type "# 288 emails, all Chinese, mostly duplicates... 😵" Sleep 2s Enter Sleep 1s
-
-Type "# Step 2: Normalize with 3am" Sleep 500ms Enter
-Type "python3 skills/3am/normalize.py bench/fixtures/real/aliyun-arms-cert-alerts.jsonl | jq ." Sleep 500ms Enter
-Sleep 6s
-
-Type "# Step 3: Check the compression" Sleep 500ms Enter
-Type "python3 bench/run_bench.py" Sleep 500ms Enter
-Sleep 5s
-
-Type "# 99.3% token reduction! 🎉" Sleep 2s Enter Sleep 1s
-Type "# Now your AI can reason about this without context overflow" Sleep 2s Enter
-Sleep 2s
+# 6-20s: Show the beautiful brief and let it stay
+Sleep 14s

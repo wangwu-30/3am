@@ -30,6 +30,7 @@ ENV/
 .DS_Store
 Thumbs.db
 
-# Demo artifacts
+# Demo artifacts (except the final demo GIF)
 demo/*.gif
+!demo/3am-demo.gif
 demo/*.mp4

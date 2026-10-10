@@ -1,3 +1,12 @@
+---
+name: 3am
+description: Take the 3 AM page. Turn hundreds of noisy production alerts into a structured incident brief with deduplicated counts, last-known-good time inference, escalation timeline, and read-only diagnostic commands.
+metadata:
+  author: wangwu-30
+  version: "0.1.0"
+  sources: aliyun-arms, alertmanager, grafana
+---
+
 # 3am: Take the 3 AM Page
 
 **让 AI 编码助手帮你处理凌晨三点的告警页面。**
