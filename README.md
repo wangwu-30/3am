@@ -50,8 +50,9 @@ kubectl logs -n cert-namespace deployment/cert-reconciler --tail=200
 ```
 ```
 
-<!-- GIF placeholder: Terminal recording showing 288 alerts -> 1-page brief in 5 seconds -->
-_Demo GIF coming soon. See `demo/record.tape` to generate it with VHS._
+![3am Demo: From 288 alerts to 1-page brief](demo/3am-demo.gif)
+
+_✅ Last known good ≈ 2026-10-08 03:31 +08:00 — Two rules agree within 45s!_
 
 ---
 
@@ -268,7 +269,7 @@ Compression: 99.0% fewer tokens
 - [x] Deduplication and timeline generation
 - [x] Real production dataset (redacted)
 - [x] Benchmark suite
-- [ ] VHS demo recording
+- [x] VHS demo recording
 - [ ] Tencent Cloud CLS support
 - [ ] PagerDuty webhook support
 - [ ] Datadog webhook support
